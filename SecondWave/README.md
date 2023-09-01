@@ -1,2 +1,2 @@
-# SecondWave
+# Second Wave
 
