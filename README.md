@@ -5,9 +5,10 @@ Algorithm study for Coding test And Algorithm contest
 
 ## 👥 팀원
 
-| 🐻 | 🐹 | 🐈 | 🐱 |
+| 　　🐻　　 | 　　🐹　　 | 　　😿　　 | 　　😺　　 |
 |:---:|:---:|:---:|:---:|
-| [joushin](https://github.com/Hawardshin) | [yejinam](https://github.com/saltwoodYJ) | [sohlee](https://github.com/aeyongdodam) | [mkwon](https://github.com/mingi1123) |
+| [joushin](https://solved.ac/profile/wnddms12345) | [yejinam](https://solved.ac/profile/saltwoodyj) | [sohlee](https://solved.ac/profile/kikititi0510) | [mkwon](https://solved.ac/profile/mingi1123) |
+
 
 ## 📅 스터디 일정
 First Wave : 9/1 ~ 9/27 <br>
