@@ -1,29 +1,147 @@
-//1. 맵에서 하나씩 선택해서 지우고 bfs 진행 -> 시간 복잡도 대폭발
-//2. 맵을 bfs하다가 특정 조건에서 1개를 지우고 진행 -> 특정 조건으로 생각해볼껀
-//맵에서 최소 값으로 이동하려면 왼쪽과 위쪽 이동을 최소화하는 걸 이용할 수도 있을 것 같다.
-//3. 시작점에서 bfs 끝점에서 bfs를 해서 각자 다른 값으로 채운다.
-//3-1. 그러면 끝점에서 부터 거리를 가진 배열과 시작점에서부터 거리를 가진 배열 2개가 나온다.
-//3-2. 두개의 배열이 나오면, 장애물만 선택해서 장애물을 없앴을 때 나오는 거리를 합쳐본다.
-//이걸 장애물이 있는 모든 곳에 대해서 하면 최소값을 구할 수 있다.
-
 #include <iostream>
 #include <queue>
+#include <cstring>
 
 using namespace std;
-int start_table[1001][1001];
-int end_table[1001][1001];
-bool vis[1001][1001];
-int dy[4] = {0,1,0,-1};
-int dx[4] = {1,0,-1,0};
 
 int N,M;
-int main(){
-	cin >> N >> M;
-	for(int i=0;i<N;i++){
+
+int table[301][301];
+bool vis[301][301];
+int to_delete[301][301];
+int dy[4] = {0,1,0,-1};
+int dx[4] = {1,0,-1,0};
+bool is_all_zero = false;
+void pirnt_table(){
+	for(int i=0;i < N;i++){
 		for(int j=0;j<M;j++){
-			cin >>start_table[i][j];
-			end_table[i][j] = start_table[i][j];
+			cout << table[i][j];
+		}
+		cout << "\n";
+	}
+	cout<<"---------------\n";
+}
+
+void bfs(int y,int x){
+	vis[y][x] = true;
+	queue<pair<int, int> >Q;
+	Q.push({y,x});
+	while (!Q.empty()){
+		auto q_front = Q.front();
+		int my = q_front.first;
+		int mx = q_front.second;
+		Q.pop();
+		for(int i=0;i < 4;i++){
+			int ty = my + dy[i];
+			int tx = mx + dx[i];
+			// cout << "t::" << ty << tx <<"\n";
+			if (ty <0 || tx < 0 || ty >=N || tx >= M)
+				continue;
+			if (vis[ty][tx])
+				continue;
+			if (table[ty][tx] != 0)
+				Q.push({ty,tx});
+			vis[ty][tx] = true;
 		}
 	}
 }
 
+bool check_island(){
+	int island_num = 0;
+	for(int i=0; i < N;i++){
+		for(int j=0;j < M;j++){
+			if (vis[i][j] == 0 && table[i][j] != 0){
+				// cout << "what?" << i << j <<"\n";
+				bfs(i,j);
+				island_num++;
+				if (island_num == 2)
+					return (true);
+			}
+		}
+	}
+	if (island_num == 0){
+		is_all_zero = true;
+		return true;
+	}
+	return false;
+}
+
+void make_to_delete(int y,int x){
+	vis[y][x] = true;
+	queue<pair<int, int> >Q;
+	Q.push({y,x});
+	while (!Q.empty()){
+		auto q_front = Q.front();
+		Q.pop();
+		int my = q_front.first;
+		int mx = q_front.second;
+		for(int i=0;i < 4;i++){
+			int ty = my + dy[i];
+			int tx = mx + dx[i];
+			if (ty <0 || tx < 0 || ty >=N || tx >= M)
+				continue;
+			if (vis[ty][tx])
+				continue;
+			if (table[ty][tx] != 0){
+				vis[ty][tx] = true;
+				Q.push({ty,tx});
+			}
+			else 
+				to_delete[my][mx]++;
+		
+		}
+	}
+}
+
+void melting(){
+	for(int i=0;i<N;i++){
+		for(int j=0; j<M;j++){
+			if (table[i][j] != 0){
+				table[i][j] = table[i][j] - to_delete[i][j];
+				if (table[i][j] < 0)
+					table[i][j] = 0;
+			}
+		}
+	}
+}
+
+void day_after(){
+	for(int i=0;i < N;i++){
+		for(int j=0;j<M;j++){
+			if (table[i][j] != 0){
+				make_to_delete(i,j);
+				melting();
+				return ;
+			}
+		}
+	}
+}
+
+int main(){
+	ios::sync_with_stdio(0);
+	cin.tie(0);
+	cout.tie(0);
+	cin >> N >> M;
+	for(int i=0;i < N;i++){
+		for(int j=0; j<M;j++){
+			cin >> table[i][j];
+		}
+	}
+	int ret = 0;
+
+	while (1){
+		if (check_island())
+			break;
+		ret++;
+		memset(vis,0,sizeof(vis));
+		day_after();
+		memset(to_delete,0,sizeof(to_delete));
+		// pirnt_table();
+		memset(vis,0,sizeof(vis));
+		// cout << "what?\n"; 
+	}
+	if (is_all_zero)
+		cout << 0 <<"\n";
+	else
+		cout << ret << "\n";
+}
