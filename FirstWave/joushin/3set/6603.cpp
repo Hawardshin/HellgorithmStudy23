@@ -7,6 +7,7 @@
 bool vis[14];
 int input[14];
 int ret[14];
+bool is_has[50];//0부터 49까지의 수
 using namespace std;
 void back_traking(int max_size,int now_size,int start){
 	if (now_size == 6){
@@ -29,27 +30,23 @@ void back_traking(int max_size,int now_size,int start){
 
 void solve_one(int size){
 	sort(input, input+size);
+	// for(int i=0;i<size;i++) cout << "input::" <<input[i] << ' ';
 	back_traking(size,0,0);
-	cout << "\n";
 	memset(vis,0,sizeof(vis));
+	memset(is_has,0,sizeof(is_has));
 }
 
 int main(){
 	ios::sync_with_stdio(0);
-	cin.tie(0);
-	cout.tie(0);
-	string tmp;
+	int input_size;
 	while (1){
-		getline(cin,tmp);
-		if (tmp == "0")
+		cin >> input_size;
+		if (input_size == 0)
 			return (0);
-		int idx = 0;
-		for(auto a: tmp){
-			if (a == ' ')
-				continue;
-			input[idx] = a - '0';
-			idx++;
-		}
-		solve_one(idx);
+		for(int i =0;i < input_size;i++){
+			cin >> input[i];
+		}	
+		solve_one(input_size);
+		cout << "\n";
 	}
 }
