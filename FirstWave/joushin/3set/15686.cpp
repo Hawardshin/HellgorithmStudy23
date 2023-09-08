@@ -1,10 +1,15 @@
+#include <vector>
 #include <iostream>
 #include <algorithm>
+#include <utility>
+#include <cstring>
+using namespace std;
 int table[51][51];//지도
 int valid[51][51];//치킨집 사용가능여부
 int n,m;
-
-using namespace std;
+vector<int> idx_ar;
+vector<pair<int,int> >chk_ar;
+int chk_size;
 
 int min_point=21474836;
 
@@ -36,27 +41,6 @@ void	cal_point(){//최소 점수 저장
 		min_point = min;
 }
 
-void	valid_recur(int depth, int i,int j)//y,x
-{
-	if (depth == m)//치킨집 m개 선택하면 최소값 다 계산
-		cal_point();
-	if (i == n + 1)//y값이 높이 넘어가면 
-		return ;
-	for (int ti=i;ti <=n;ti++){
-		for (int tj=1;tj<=n;tj++){
-			if (i == ti && tj == 1)//x한칸 y한칸씩 움직여서
-				tj = j;
-			if (table[ti][tj] == 2){
-				valid[ti][tj] = 1;
-				if (tj == n)
-					valid_recur(depth+1,ti+1,1);
-				else
-					valid_recur(depth+1,ti,tj + 1);
-				valid[ti][tj] = 0;
-			}
-		}
-	}
-}
 int main()
 {
 	ios::sync_with_stdio(0);
@@ -66,8 +50,24 @@ int main()
 	for (int i=1;i <=n;i++){
 		for (int j=1;j <=n;j++){
 			cin >> table[i][j];
+			if (table[i][j] == 2){
+				chk_ar.push_back({i,j});
+				chk_size++;
+			}
 		}
 	}
-	valid_recur(0,1,1);
+	for(int i=0;i < chk_size - m;i++) idx_ar.push_back(0);
+	for(int i=0;i< m;i++)idx_ar.push_back(1);
+	do{
+		for(int i=0;i < chk_size;i++){
+			if (idx_ar[i] == 1){
+				int y = chk_ar[i].first;
+				int x = chk_ar[i].second;
+				valid[y][x] = true;
+			}
+		}
+		cal_point();
+		memset(valid, 0,sizeof(valid));
+	}while (next_permutation(idx_ar.begin(), idx_ar.end()));
 	cout<< min_point << "\n";
 }
