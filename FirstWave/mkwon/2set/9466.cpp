@@ -1,19 +1,29 @@
 #include <iostream>
 #include <algorithm>
-#include <queue>
-#include <vector>
+#include <cstring>
 
 using namespace std;
 
-int n,tab[100005]={0,}, vis[100005]={0,};
+int n,res=0,tab[100005]={0,},vis[100005]={0,},check[100005]={0,};
 
-int dfs(int start, int node, int vis[]){
+void dfs(int x){
 
-    if (start == node) return 0;
-    if (vis[node] == 1) return 1;
+    vis[x] = true;
+	int next = tab[x];
 
-    vis[node] = 1;
-    return dfs(start, tab[node], vis);
+	
+	if (!vis[next]) {
+		dfs( next);
+	}
+	else if (!check[next]) {//방문은 했지만 아직 사이클이 아니라면 next까지 포함해서 사이클 완성
+		//자기 자신을 포함한 팀의 멤버를 카운트
+		for (int i = next; i != x; i = tab[i]) {
+			res++;
+		}
+		res++;
+	}
+	check[x] = true;
+
 }
 
 int main()
@@ -24,17 +34,19 @@ int main()
     cin>>t;
 
     while (t--){
+        res = 0;
+        memset(tab, false, sizeof(tab));
+		memset(vis, false, sizeof(vis));
+        memset(check, false, sizeof(check));
         cin>>n;
         for(int i=1; i<=n; i++)
             cin>>tab[i];
         
-        int res = 0;
         for(int i=1; i<=n; i++){
-            int vis[100005]={0,};
-            vis[i] = 1;
-            if (dfs(i, tab[i], vis)) res++;
+            if (vis[i]) continue;
+            dfs(i);
         }
-        cout<<res<<"\n";
+        cout<<n-res<<"\n";
     }
 
     return 0;
