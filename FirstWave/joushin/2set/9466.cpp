@@ -6,9 +6,7 @@ int T,n;
 int student_link[100001];
 bool vis[100001];
 bool done[100001];
-#define IMPOSSIBLE  -1
-#define DONE 0
-	int ret = 0;
+int ret = 0;
 void make_ret(int now){
 	vis[now] = true;
 	int next = student_link[now];
@@ -38,11 +36,11 @@ int main(){
 	ios::sync_with_stdio(0);
 	cin.tie(0);
 	cout.tie(0);
-	cin >> T ;
+	cin >> T;
 	for(int i=0;i < T;i++){
 		cin >> n;
 		for(int j=1;j <=n; j++){
-			cin >> student_link[j];	
+			cin >> student_link[j];
 		}
 		solve();
 	}

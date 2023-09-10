@@ -12,15 +12,6 @@ int to_delete[301][301];
 int dy[4] = {0,1,0,-1};
 int dx[4] = {1,0,-1,0};
 bool is_all_zero = false;
-void pirnt_table(){
-	for(int i=0;i < N;i++){
-		for(int j=0;j<M;j++){
-			cout << table[i][j];
-		}
-		cout << "\n";
-	}
-	cout<<"---------------\n";
-}
 
 void bfs(int y,int x){
 	vis[y][x] = true;
@@ -34,7 +25,6 @@ void bfs(int y,int x){
 		for(int i=0;i < 4;i++){
 			int ty = my + dy[i];
 			int tx = mx + dx[i];
-			// cout << "t::" << ty << tx <<"\n";
 			if (ty <0 || tx < 0 || ty >=N || tx >= M)
 				continue;
 			if (vis[ty][tx])
@@ -51,7 +41,6 @@ bool check_island(){
 	for(int i=0; i < N;i++){
 		for(int j=0;j < M;j++){
 			if (vis[i][j] == 0 && table[i][j] != 0){
-				// cout << "what?" << i << j <<"\n";
 				bfs(i,j);
 				island_num++;
 				if (island_num == 2)
@@ -88,7 +77,6 @@ void make_to_delete(int y,int x){
 			}
 			else 
 				to_delete[my][mx]++;
-		
 		}
 	}
 }
@@ -136,9 +124,7 @@ int main(){
 		memset(vis,0,sizeof(vis));
 		day_after();
 		memset(to_delete,0,sizeof(to_delete));
-		// pirnt_table();
 		memset(vis,0,sizeof(vis));
-		// cout << "what?\n"; 
 	}
 	if (is_all_zero)
 		cout << 0 <<"\n";

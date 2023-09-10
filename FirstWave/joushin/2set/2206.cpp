@@ -25,26 +25,6 @@ int cx2[6] = { 0, 1, 0,1, 0, 0};
 int cy2[6] = { 1, 0,-1,0,-1,-1};
 int N,M;
 
-void print_stable(){
-	for(int i=0; i < N;i++){
-		for(int j =0; j<M;j++)
-		{
-			cout << start_table[i][j];
-		}
-		cout << "\n";
-	}
-	cout << "-------------start done --------------\n";
-}
-void print_etable(){
-	for(int i=0; i < N;i++){
-		for(int j =0; j<M;j++)
-		{
-			cout << end_table[i][j];
-		}
-		cout << "\n";
-	}
-	cout << "-------------end done --------------\n";
-}
 
 void bfs_start(int y,int x){
 	vis[y][x] = true;
@@ -98,7 +78,6 @@ void bfs_end(int y,int x){
 	}
 }
 
-
 int main(){
 	cin >> N >> M;
 	cin.ignore();
@@ -114,10 +93,8 @@ int main(){
 		}
 	}
 	bfs_start(0,0);
-	// print_stable();
 	memset(vis,0,sizeof(vis));
 	bfs_end(N - 1, M - 1);
-	// print_etable();
 	int min = start_table[N-1][M -1];
 	if (min == 0)
 		min = 2147483647;
@@ -133,12 +110,10 @@ int main(){
 						continue;
 					if (start_table[y1][x1] <= 0 || end_table[y2][x2] <= 0)
 						continue;
-					// cout << "{x1 ,y1} {" << x1 << "," << y1 << "}\n"; 
-					// cout << "{x2 ,y2} {" << x2 << "," << y2 << "}\n"; 
 					if (min > start_table[y1][x1] + end_table[y2][x2] + 1)
 						min =start_table[y1][x1] + end_table[y2][x2] + 1;
 				}
-					for(int a=0;a <6;a++){
+				for(int a=0;a <6;a++){
 					int x1 = j + cx2[a];
 					int y1 = i + cy2[a];
 					int x2 = j + cx1[a];
@@ -147,8 +122,6 @@ int main(){
 						continue;
 					if (start_table[y1][x1] <= 0 || end_table[y2][x2] <= 0)
 						continue;
-					// cout << "{x1 ,y1} {" << x1 << "," << y1 << "}\n"; 
-					// cout << "{x2 ,y2} {" << x2 << "," << y2 << "}\n"; 
 					if (min > start_table[y1][x1] + end_table[y2][x2] + 1)
 						min =start_table[y1][x1] + end_table[y2][x2] + 1;
 				}
