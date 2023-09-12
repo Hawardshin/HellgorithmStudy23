@@ -29,7 +29,6 @@ int get_Tsize(int i){
 	return n;
 }
 
-
 void calc(int idx, vector<int> &ar){
 	for(int i = 0; i < N;i++){
 		for(int j=0;j<N;j++){
