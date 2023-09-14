@@ -14,7 +14,7 @@ int min_cost = 2147483647;
 int is_pos()
 {
     int total[4] = {0, 0, 0, 0};
-    for (int i = 0; back[i]; i++)
+    for (int i = 0; back[i]; i++) // 영양소 체크
     {
             total[0] += ingredients[back[i] - 1][0];
             total[1] += ingredients[back[i] - 1][1];
@@ -23,7 +23,7 @@ int is_pos()
     }
     for (int i = 0; i < 4; i++)
     {
-        if (total[i] < M[i])
+        if (total[i] < M[i]) // 덜찬게 있으면 0 반환
             return 0;
     }
     return 1;
@@ -31,16 +31,17 @@ int is_pos()
 
 void back_in_the_time(int depth, int now, int cost)
 {
-    if (is_pos() && cost <= min_cost)
+    if (is_pos() && cost <= min_cost) // 영양소 다찼고 더 적은 가격이라면 
     {
         if (cost < min_cost)
             memcpy(ret, back, sizeof(back));
         else if (memcmp(ret, back, sizeof(ret)) > 0)
-            memcpy(ret, back, sizeof(back));
+            memcpy(ret, back, sizeof(back)); // 갱신
         min_cost = cost;
         return ;
     }
-    if (now == N)
+
+    if (now == N) // 끝까지 왔으면 종료
         return ;
 
     for (int i = now; i < N; i++)

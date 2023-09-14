@@ -36,21 +36,21 @@ int bfs(int start_x, int start_y)
         int x = queue.front().first;
         int y = queue.front().second;
         queue.pop();
-        size++;
+        size++; // 방크기 더하기
         for (int i = 0; i < 4; i++)
         {
-            int X = x + pos_x[i];
+            int X = x + pos_x[i]; // 동서남북
             int Y = y + pos_y[i];
-            int wall = pos_w[i];
-            if (in_range(X, Y) && ( (map[x][y] & wall) != wall)
+            int wall = pos_w[i]; // 벽 비트연산할 값
+            if (in_range(X, Y) && ( (map[x][y] & wall) != wall) // 벽이 없으면
                     && check[X][Y] == 0)
             {
-                check[X][Y] = 1;
-                queue.push({X, Y});
+                check[X][Y] = 1; // 방문체크
+                queue.push({X, Y}); //큐 넣기
             }
         }
     }
-    return size;
+    return size; // 방크기 리턴
 }
 
 int main()
@@ -67,8 +67,8 @@ int main()
         {
             if (check[i][j] == 0)
             {
-                biggest = max(bfs(i, j), biggest);
-                cnt++;
+                biggest = max(bfs(i, j), biggest); // bfs돌면서 최대방크기 갱신 
+                cnt++; // 방갯수 카운트
             }
         }
     }
@@ -82,11 +82,11 @@ int main()
                 int X = i + pos_x[k];
                 int Y = j + pos_y[k];
                 int wall = pos_w[k];
-                if (in_range(X, Y) &&  ((map[i][j] & wall) == wall)) 
+                if (in_range(X, Y) &&  ((map[i][j] & wall) == wall)) // 벽이있으면 
                 {
-                    map[i][j] -= wall;
+                    map[i][j] -= wall; // 부수고 
                     memset(check, 0, sizeof(check));
-                    bigger = max(bfs(i, j), bigger);
+                    bigger = max(bfs(i, j), bigger); // bfs후 갱신
                     map[i][j] += wall;
                 }
 

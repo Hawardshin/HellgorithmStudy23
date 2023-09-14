@@ -1,5 +1,6 @@
+// 보고푼 문제2
 #include <iostream>
-#include <vector>
+#include <vectoir>
 
 using namespace std;
 

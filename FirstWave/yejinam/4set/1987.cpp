@@ -20,15 +20,15 @@ int in_range(int x, int y)
 
 void back_in_the_time(int depth, int x, int y)
 {
-	if (ret < depth)
+	if (ret < depth) // 길이 갱신
 		ret = depth;
 	for(int i = 0; i < 4; i++)
 	{
 		int X = x + pos_x[i];
 		int Y = y + pos_y[i];
 		if (in_range(X, Y) && alphabet[board[X][Y] - 'A'] == 0)
-		{
-			alphabet[board[X][Y] - 'A'] = 1;
+		{  // 다음알파벳 탐색이 안되어있다면
+			alphabet[board[X][Y] - 'A'] = 1; // 체크후 탐색
 			back_in_the_time(depth + 1, X, Y);
 			alphabet[board[X][Y] - 'A'] = 0;
 		}
