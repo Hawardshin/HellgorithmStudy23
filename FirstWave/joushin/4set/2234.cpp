@@ -65,7 +65,6 @@ void	bfs(int y,int x){
 				continue;
 			if (i == 3 && check_west(table[my][mx]))//서
 				continue;
-			// cout << my <<","<< mx <<"|"<< ty <<","<< tx << "\n";
 			if (vis_room[ty][tx]!= 0)
 				continue;
 			room_size++;
@@ -115,5 +114,4 @@ int main(){
 		}
 	}
 	cout << room_idx << "\n" << max_size<< "\n" << max_sum << "\n";
-
 }

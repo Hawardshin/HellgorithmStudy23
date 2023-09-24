@@ -1,6 +1,6 @@
-#include <iostream>
-#include <vector>
-using namespace std;
+	#include <iostream>
+	#include <vector>
+	using namespace std;
 bool sosu[4000001];
 vector<int> sosu_ar;
 long long sum_ar[4000001];
