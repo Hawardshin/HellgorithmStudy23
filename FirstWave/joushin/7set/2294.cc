@@ -50,9 +50,6 @@ int main(){
 			}
 		}
 	}
-	// for(int i=0;i<=k;i++){
-	// 	cout << "DP : " << i <<"|" << dp[i] << "\n" ;  
-	// }
 	if (dp[k] == 0)
 		dp[k] = -1;
 	cout << dp[k] << "\n";
