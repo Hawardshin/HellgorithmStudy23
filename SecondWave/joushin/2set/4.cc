@@ -1,54 +1,51 @@
 #include <iostream>
 #include <string>
-#define NAME "Messi "
-#define SHOUT "Gimossi "
-#define RESULT "Messi Messi Gimossi\n"
+#include <vector>
 
-//6,8의 연속
-/*
-A는 6개
-B는 8개
-
-A
-A B
-A B A
-A B A A B
-A B A A B A B A 
-A B A A B A B A A B A A B
-A B A A B A B A A B A A B A B A A B A B A 
-A B A A B A B A A B A A B A B A A B A B A A B A A B A B A A B A A B
-
-
-1[A]
-2[A B]
-3[2 1]
-4[3 2]
-5[4 3]
-6[5 4]
-7[6 5]
-*/
 
 using namespace std;
+
+string result = "Messi Gimossi";
 int M;
-string bef = "Messi ";
-string ret="Messi Gimossi ";
+vector<int> mesi;
+
 void input(){
 	cin >>M;
 }
 
-void	solve(){
+//이분탐색
+int search(int Step, int order)
+{
+	//숫자를 게속 줄여서 가능
+    if (order <= mesi[1])
+        return order;
+    if (order <= mesi[Step - 1])//전꺼
+        return search(Step - 1, order);
+    else if (order == mesi[Step - 1] + 1) // 공백
+        return -1;
+    else //전전꺼
+        return search(Step - 2, order - mesi[Step - 1] - 1);
+}
 
-	while (M > ret.size()){
-		string tmp = bef;
-		M-=bef.size();
-		bef = ret;
-		ret = tmp + ret;
+void	solve(){
+	
+	int a = 5;
+	int b = 13;
+	mesi.push_back(a);
+	mesi.push_back(b);
+	int now_size = 0;
+	while (now_size < M){
+		now_size = a+b + 1;
+		a = b;
+		b =now_size;
+		mesi.push_back(now_size);
 	}
-	// cout << ret << '\n';
-	if (ret[M-1] == ' ')
+	int size = mesi.size();
+	int ret = search(size, M);
+	if (ret == -1 || ret == 6)
 		cout << "Messi Messi Gimossi\n";
 	else 
-		cout << ret[M-1] << "\n";
+		cout << result[ret-1] << "\n";
 }
 
 int main(){
