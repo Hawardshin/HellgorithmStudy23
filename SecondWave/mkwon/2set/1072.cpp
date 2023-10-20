@@ -3,27 +3,31 @@
 
 using namespace std;
 
-long long int x,y;
+long long x,y,z;
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(0); cout.tie(0);
 
     cin>>x>>y;
-
-    cout<<((y * 100) / x);
-
-    cout<<(x - x * y * y);
-    cout<<" "<<(x * y - 1)<<" ";
-    long long int res = (x - x*y*y)/(x*y - 1);
-
-    cout<<res;
     
+    z = ((y * 100) / x);
+
+    if(z>=99) {
+        cout<<"-1";
+        return 0;
+    }
+
+    int left=0, right= 1000000000;
+
+    while(left<=right) {
+        int mid=(left+right)/2;
+        int temp=(y+mid) * 100 / (x+mid);
+
+        if(z<temp) right=mid-1;
+        else left=mid+1;
+    }
+    
+    cout << left;
+
     return 0;
 }
-
-// (x + n) / (y + n) != x * y
-// (x + n) != x*y*(y + n)
-// x + n != x*y*y + x*y*n
-// x*y*n - n != x - x*y*y
-// n(x*y - 1) = x - x*y*y
-// n = (x - x*y*y) / (x*y - 1)

@@ -3,41 +3,26 @@
 
 using namespace std;
 
-int n;
-string str1 = "Messi";
-string str2 = "Messi Gimossi";
-string str;
+const int max_n = 39; 
+int f[max_n] = {0, 5, 13}, m;
+string s = "Messi Gimossi";
 
 int main(){
     ios_base::sync_with_stdio(false); cin.tie(0); cout.tie(0);
 
-    cin>>n;
+    cin>>m;
 
-    if (n<=5) {
-        cout<<str1[n-1];
-        return 0;
-    }
-    else if (n<=13){
-        cout<<str2[n-1];
-        return 0;
-    }
-    
-    int last1=5,last2=13;
-    int newN;
-    while (1){
-        newN = last1+last2+1;
-        str = str1+" "+str2;
-        if (newN > n) break;
-        else {
-            last1 = last2;
-            str1=str2;
-            last2 = newN;
-            str2=str;
-        }
-    }
-    if (str[n-1] == ' ') cout<<"Messi Messi Gimossi";
-    else cout<<str[n-1];
-    
+    m--; // 인덱스 0부터
+    for(int i = 3; i <= max_n; i++){
+		f[i] = f[i-1] + f[i-2] + 1;
+	} 
+	for(int i = max_n; i >= 2; i--){
+		if(m >= f[i]) m -= (f[i] + 1);
+	}
+
+    if(m == 5 || m == -1) cout << "Messi Messi Gimossi" << "\n";
+	else cout << s[m] << "\n";
+
     return 0;
 }
 
