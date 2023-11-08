@@ -57,7 +57,6 @@ void input(){
 			}
 		}
 	}
-
 	for(int i=0;i<4;i++){
 		cin >> c_ar1[i];
 	}
@@ -78,18 +77,21 @@ void input(){
 				cant_ans[i] = true;
 			}
 		}
-		
 	}
+}
+
+bool is_inar(int &arr){
+
 }
 
 
 int main(){
 	input();
-
 	// 1~12 중 더 크다고 생각
 	// 1~12 중 더 작다고 생각
-	for(int i=1;i<12;i++){
+	for(int i=1;i<=12;i++){
 		if (cant_ans[i] != true)
 			cout << i << "\n";
 	}
+	
 }
