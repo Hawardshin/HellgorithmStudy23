@@ -14,7 +14,7 @@ bool vis[101];
 //최대 이동거리 1000미터
 using namespace std;
 
-//정답을 만들 수 있으면  true
+	//정답을 만들 수 있으면  true
 //없다면  false
 bool make_ret(vector<pair<int,int>> &store,int now_x,int now_y){
 	int store_s = store.size();
@@ -31,15 +31,10 @@ bool make_ret(vector<pair<int,int>> &store,int now_x,int now_y){
 		int store_dist = dist_x + dist_y;
 		if (store_dist > 1000)
 			continue;
-		// int s_dist_y = abs(store[i].first - dest_x);
-		// int s_dist_x = abs(store[i].second - dest_y);
-		// int s_dist = s_dist_x + s_dist_y; //새로 가는 가게 위치에서 도착 지점까지 거리
-		// if (s_dist > f_dist)
-		// 	continue;
 		vis[i] =true;
 		if (make_ret(store,store[i].first,store[i].second))
 			return true;
-		vis[i] = false;
+		// vis[i] = false;
 	}
 	return false;
 }

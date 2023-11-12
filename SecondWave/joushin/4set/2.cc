@@ -21,23 +21,14 @@ int money_cnt(int x1,int y1){
 }
 
 void make_three_flower(int a,int b,int c){
-	int aMb = abs(b-a);
-	int bMc = abs(b-c);
-	int aMc = abs(a-c);
-	if (aMb <=2 ||bMc <= 2 || aMc <=2)
-		return ;
-	if (a %N == 0 || a % N == N-1 || b % N == 0 || b % N == N-1 || c % N == 0 || c % N == N-1)
-		return ;
-	if ((N-1 <=bMc && bMc <= N+1 ) || (N-1 <=aMb && aMb <= N+1 ) || (N-1 <=aMc && aMc <= N+1 ))
-		return ;
-	if (aMb == 2*N || aMc == 2*N || bMc == 2*N)
-		return ;
 	int x1 = a%N;
 	int y1 = a/N;
 	int	x2 = b%N;
 	int y2 = b/N;
 	int x3 = c%N;
 	int y3 = c/N;
+	if (abs(x1-x2) + abs(y1-y2) <=2 || abs(x1-x3) + abs(y1-y3) <=2|| abs(x2-x3) + abs(y2-y3) <=2)
+		return ;
 	int cnt = 0;
 	if (y1 == N-1 || y2 == N-1 || y3 == N-1 || x1 == N-1 || x2 == N-1 || x3 == N-1 || x1 == 0 || x2 == 0 || x3 == 0 || y1 == 0 || y2 == 0 || y3 == 0)
 		return ;
