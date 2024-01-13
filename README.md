@@ -13,3 +13,4 @@ Algorithm study for Coding test And Algorithm contest
 ## 📅 스터디 일정
 First Wave : 9/1 ~ 9/27 <br>
 Second Wave : 10/11 ~ 11/29<br>
+Thrid Wave : 1/14 ~
