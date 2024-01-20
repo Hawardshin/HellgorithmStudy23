@@ -1,28 +1,39 @@
 #include <iostream>
 #include <algorithm>
+#define INF 2147483647
 
 using namespace std;
 
 int n,h;
-int tab1[200005]={0,},tab2[200005]={0,};
+int bottom[500005]={0,},up[500005]={0,},sum[500005]={0,};
 
 int main(void) {
     ios_base::sync_with_stdio(false);
     cin.tie(0);
 
     cin>>n>>h;
-    for (int i=0; i<n/2; i++)
-        cin>>tab1[i]>>tab2[i];
 
-    sort(tab1, tab1+n/2);
-    sort(tab2, tab2+n/2);
+    int a,b;
+    for (int i=0; i<n/2; i++){
+        cin>>a>>b;
+        bottom[a]++; up[h+1-b]++;
+    }
 
-    cout<<"\n tab1 : ";
-    for (int i=0; i<n/2; i++)
-        cout<<tab1[i]<<" ";
-    cout<<"\n tab2 : ";
-    for (int i=0; i<n/2; i++)
-        cout<<tab2[i]<<" ";
+    for (int i=h-1; i>=1; i--)
+        bottom[i] += bottom[i+1]; 
+    
+    int res = INF, cnt=0;
+    for(int i=1; i<=h; i++){
+        up[i] += up[i-1];
+        sum[i] += up[i] + bottom[i];
+        if (res > sum[i]){
+            cnt=1;
+            res=sum[i];
+        }
+        else if (sum[i] == res) cnt++;
+    }
+    cout<<res<<" "<<cnt;
+
 
     return 0;
 }
