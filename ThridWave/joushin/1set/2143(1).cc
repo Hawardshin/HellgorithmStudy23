@@ -12,6 +12,7 @@ void input(){
 	cin >>T >> n;
 	for(int i=1;i<=n;i++){
 		cin >> inputA[i];
+		
 	}
 	cin >> m;
 	for(int i=1;i<=m;i++){
