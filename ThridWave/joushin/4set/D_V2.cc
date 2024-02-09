@@ -21,7 +21,8 @@
 
 #include <iostream>
 #include <algorithm>
-#include <cmath>
+#include <iomanip>
+
 using namespace std;
 
 double a_goal;
@@ -41,15 +42,34 @@ void	initPaskal(){
 	}
 }
 
+double winRate(int num,double win_rate){
+	double ret = 1;
+	for(int i=0;i<num;i++){
+		ret*=win_rate;
+	}
+	for(int i=0;i<18-num;i++){
+		ret*=(1 - win_rate);
+	}
+
+	//18Cnum
+	ret*=C[num];
+	return ret;
+}
+
+// 18Ca 18Cb
+double calcPersent(int a,int b){
+	return winRate(a, a_goal) * winRate(b, b_goal);
+}
+
 int main(){
 	cin >> a_goal >> b_goal;
 	initPaskal();
 	a_goal /= 100; b_goal /=100;
-	double notSa =0;
-	double notSb =0;
-	for(int r: not_sosu){
-		notSa+= C[r]*pow(a_goal,r)* pow(1-a_goal,18-r);
-		notSb+= C[r]*pow(b_goal,r)*pow(1-b_goal,18-r);
+	double not_sosu_rate =0;
+	for(int i=0;i<12;i++){
+		for(int j=0;j<12;j++){
+			not_sosu_rate += calcPersent(not_sosu[i],not_sosu[j]);
+		}
 	}
-	cout << 1 - notSa * notSb << "\n";
+	cout << setprecision(18) << 1 - not_sosu_rate << "\n";
 }
