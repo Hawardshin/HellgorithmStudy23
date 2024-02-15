@@ -1,55 +1,171 @@
 /*
-90분 ->5분 간격 
-0-5 5-10 10-15 15-20 ... 85-90
-최대 득점 수 : 90/5=18
-소수 : 2,3,5,7,11,13,17 -> 7개
-소수가 나올 확률 : 
-	소수 소수 
-	소수 안소수
-	안소수 소수
-	안소수 안소수
-둘 다  소수가 아닌 경우를 모두 계산한 이후에 전체 확률을 빼주면 되지 않을까?
-11*11 의 경우의 수가 존재
-각  경우의 수에 따른 확률 계산하면 될듯..!
+N*N 체스판
+K : 말의 갯수
+0: 흰색
+1: 빨강
+2: 파랑
 
-한팀이 한골만 얻을 확률
-1. 16C1 * 승리확률^1 * 패배확률 ^15
+1. 입력을 받는다.
+2. 각 점별로 스택을 둔다.
+3. 이동하고자 할 때 : 
+	- 다음칸 흰색 : 그낭 이동
+	- 다음칸 파랑 : 방향 변경 및 한칸 이동 (단 다음칸이 낭떠러지거나 파랑이면 방향만 변경)
+	- 다음칸 빨강 : 일단 이동 후 Stack을 뒤집음
+- 빨강이 아닌경우
+	이동할 때 stack을 pop해서 이동하려는 숫자가 나올 때까지 tmp에 쌓고, tmp를 다시 이동하려는 stack에 push
+- 빨강인 경우
+	이동할 때 이동하려는 stack을 전부 pop 해서 tmp에 넣고 이동하려는 stack에 pop해가면서 값을 넣고 이후 tmp를 넣는다.
+	인줄 알았는데 tmp에 넣는걸 다시 뒤집어야만한다.
+ 
+종료조건 : 해당 stack의 크기가 4가 되는 순간 종료 또는 날짜가 1000이 넘는경우
 
-...
-한팀이 한골 넣을 확률 * 한팀 한골 넣을 확률 + 
+구현 전략 : 흰색 구현 후 test, 파랑 구현 후 test, 이후 빨강 구현	
 */
-
 #include <iostream>
 #include <algorithm>
-#include <cmath>
+#include <stack>
+#include <deque>
+#define WHITE 0
+#define RED 1
+#define BLUE 2
+
+ enum e_dir{
+	STOP,
+	RIGHT,
+	LEFT,
+	UP,
+	DOWN
+};
+
+int dy[5] = {0,0,0,-1,1};
+int dx[5] = {0,1,-1,0,0};
+
+typedef struct s_horse{
+	int x;
+	int y;
+	int dir;
+} t_horse;
+
 using namespace std;
 
-double a_goal;
-double b_goal;
 
-int not_sosu[12] = {0,1,4,6,8,9,10,12,14,15,16,18};
-int C[19];
+int N,K;
+int table[11][11];
+t_horse horseStore[11];
+stack<int> parking[11][11];
 
-//18C0부터 18C 18까지.
-void	initPaskal(){
-	C[0] = C[1] = 1;
-	for (int i=2;i<=18;i++){
-		C[0]=C[i]=1;
-		for(int j=i-1;j>0;j--){
-			C[j] += C[j-1];
+
+void print_parking(){
+	cout << "---------------------\n";
+	for(int i=1;i<=N;i++){
+		for(int j=1;j<=N;j++){
+			cout << parking[i][j].size();
+		}
+		cout << "\n";
+	}
+}
+
+void input(){
+	cin >> N >> K;
+	for(int i=1;i<=N;i++){
+		for(int j=1;j<=N;j++) cin >> table[i][j];
+	}
+	for(int i=1;i<=K;i++){
+		int x,y,dir;
+		cin >> y>>x >> dir;
+		horseStore[i] = {x,y,dir};
+		parking[y][x].push(i);
+	}
+}
+
+e_dir reverseDir(int dir){
+	switch(dir){
+		case LEFT : 
+			return RIGHT;
+		case RIGHT: 
+			return LEFT;
+		case UP:
+			return DOWN;
+		case DOWN: 
+			return UP;
+	}
+	return STOP;
+}
+
+void updateStack(bool isRed,int now_horse, int nx,int ny,int x,int y){
+	deque<int> tmp;
+	if (isRed){
+		int nHorse = -1;
+		while (nHorse != now_horse){
+			nHorse = parking[y][x].top();
+			// cout << "주차중인 말 : " <<  nHorse << "\n";
+			parking[y][x].pop();
+			horseStore[nHorse].x = nx;
+			horseStore[nHorse].y = ny;
+			parking[ny][nx].push(nHorse);
+		}
+	}else {
+		int nHorse = -1;
+		while (nHorse != now_horse){
+			nHorse = parking[y][x].top();
+			// cout << "주차중인 말 : " <<  nHorse << "\n";
+			parking[y][x].pop();
+			horseStore[nHorse].x = nx;
+			horseStore[nHorse].y = ny;
+			tmp.push_back(nHorse);
+		}
+		while (!tmp.empty()){
+			parking[ny][nx].push(tmp.back());
+			tmp.pop_back();
 		}
 	}
 }
 
-int main(){
-	cin >> a_goal >> b_goal;
-	initPaskal();
-	a_goal /= 100; b_goal /=100;
-	double notSa =0;
-	double notSb =0;
-	for(int r: not_sosu){
-		notSa+= C[r]*pow(a_goal,r)* pow(1-a_goal,18-r);
-		notSb+= C[r]*pow(b_goal,r)*pow(1-b_goal,18-r);
+bool moveNext(int horse, int x,int y,int dir){
+	int nx = x+dx[dir];
+	int ny = y+dy[dir];
+
+	stack<int>tmp;
+	bool isRed = false;
+	if (nx < 1 || ny < 1 || nx > N || ny> N || table[ny][nx] == BLUE){
+		// cout << "다음칸 낭떠러지나 블루\n";
+		dir = reverseDir(dir);
+		nx = x+dx[dir];
+		ny = y+dy[dir];
+		horseStore[horse].dir=dir;
+		if (nx < 1 || ny < 1 || nx > N || ny> N || table[ny][nx] == BLUE){
+			if (parking[y][x].size() >=4 )
+				return true;
+			return false;
+		}
 	}
-	cout << 1 - notSa * notSb << "\n";
+	if (table[ny][nx] == RED){
+		// cout << "다음칸 빨강\n";
+		isRed = true;
+	}
+	// cout << "다음위치: " << nx<< ny << "\n";
+	updateStack(isRed,horse,nx,ny,x,y);
+	if (parking[ny][nx].size() >=4 )
+		return true;
+	return false;
+}
+
+int main(){
+	input();
+	int day = 1;
+	while (day<=1001){
+		// cout << "시작!\n";
+		// print_parking();
+		for(int i=1;i<=K;i++){
+			// cout << i <<"번 말 : " <<horseStore[i].x << "," << horseStore[i].y << "\n" ;
+			if (moveNext(i,horseStore[i].x,horseStore[i].y,horseStore[i].dir)){
+				cout << day<<"\n";
+				return 0;
+			}
+			// print_parking();
+		}
+		// cout << "--------day: " << day << "-----------\n";
+		day++;
+	}
+	cout << -1 << "\n";
 }

@@ -95,28 +95,20 @@ e_dir reverseDir(int dir){
 void updateStack(bool isRed,int now_horse, int nx,int ny,int x,int y){
 	deque<int> tmp;
 	if (isRed){
-		while (!parking[ny][nx].empty()){
-			tmp.push_back(parking[ny][nx].top());
-			parking[ny][nx].pop();
-		}
 		int nHorse = -1;
 		while (nHorse != now_horse){
 			nHorse = parking[y][x].top();
-			cout << "주차중인 말 : " <<  nHorse << "\n";
+			// cout << "주차중인 말 : " <<  nHorse << "\n";
 			parking[y][x].pop();
 			horseStore[nHorse].x = nx;
 			horseStore[nHorse].y = ny;
 			parking[ny][nx].push(nHorse);
 		}
-		while (!tmp.empty()){
-			parking[ny][nx].push(tmp.front());
-			tmp.pop_front();
-		}
 	}else {
 		int nHorse = -1;
 		while (nHorse != now_horse){
 			nHorse = parking[y][x].top();
-			cout << "주차중인 말 : " <<  nHorse << "\n";
+			// cout << "주차중인 말 : " <<  nHorse << "\n";
 			parking[y][x].pop();
 			horseStore[nHorse].x = nx;
 			horseStore[nHorse].y = ny;
@@ -136,19 +128,22 @@ bool moveNext(int horse, int x,int y,int dir){
 	stack<int>tmp;
 	bool isRed = false;
 	if (nx < 1 || ny < 1 || nx > N || ny> N || table[ny][nx] == BLUE){
-		cout << "다음칸 낭떠러지나 블루\n";
+		// cout << "다음칸 낭떠러지나 블루\n";
 		dir = reverseDir(dir);
 		nx = x+dx[dir];
 		ny = y+dy[dir];
 		horseStore[horse].dir=dir;
-		if (nx < 1 || ny < 1 || nx > N || ny> N || table[ny][nx] == BLUE)
+		if (nx < 1 || ny < 1 || nx > N || ny> N || table[ny][nx] == BLUE){
+			if (parking[y][x].size() >=4 )
+				return true;
 			return false;
+		}
 	}
 	if (table[ny][nx] == RED){
-		cout << "다음칸 빨강\n";
+		// cout << "다음칸 빨강\n";
 		isRed = true;
 	}
-	cout << "다음위치: " << nx<< ny << "\n";
+	// cout << "다음위치: " << nx<< ny << "\n";
 	updateStack(isRed,horse,nx,ny,x,y);
 	if (parking[ny][nx].size() >=4 )
 		return true;
@@ -159,17 +154,17 @@ int main(){
 	input();
 	int day = 1;
 	while (day<=1000){
-		cout << "시작!\n";
-		print_parking();
+		// cout << "시작!\n";
+		// print_parking();
 		for(int i=1;i<=K;i++){
-			cout << i <<"번 말 : " <<horseStore[i].x << "," << horseStore[i].y << "\n" ;
+			// cout << i <<"번 말 : " <<horseStore[i].x << "," << horseStore[i].y << "\n" ;
 			if (moveNext(i,horseStore[i].x,horseStore[i].y,horseStore[i].dir)){
 				cout << day<<"\n";
 				return 0;
 			}
-			print_parking();
+			// print_parking();
 		}
-		cout << "--------day: " << day << "-----------\n";
+		// cout << "--------day: " << day << "-----------\n";
 		day++;
 	}
 	cout << -1 << "\n";
