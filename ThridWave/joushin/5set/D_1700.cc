@@ -1,74 +1,80 @@
-/*
-이전의 이동기록을 다시 돌아가면서 해당 값을 넣어주면 됨
-*/
+//다음 해당 숫자까지 거리를 저장?
+//다음 해당 숫자 남은 갯수 저장
+//거리가 맞는듯?
+
+
+//3구
+//1,2,3,4,3,2,1
+//1뽑고 4 꽂고, 
+//4 뽑고 1 꽂고
 
 #include <iostream>
 #include <algorithm>
 #include <vector>
-#define X first
-#define Y second
+#include <map>
 using namespace std;
 
-bool vis[101][101];
+int N, K;
+int input[101];
 
-pair<int,int> next_pos(pair<int,int> a,int dir){
-	switch(dir){
-		case 0: return (make_pair(a.X+1,a.Y));
-		case 1: return (make_pair(a.X,a.Y-1));
-		case 2 : return make_pair(a.X-1,a.Y);
-		case 3 : return make_pair(a.X,a.Y+1);
-	}
-	cout <<"MAD\n";
-	return make_pair(-1,-1);
-}
+bool vis[101];
+int tap_size = 0;
 
-int changeDir(int dir){
-	dir++;
-	if (dir ==4)
-		dir = 0;
-	return dir;
-}
-
-
-void makeCurve(vector<int> &s,int g,pair<int,int> pos){
-	int dep = 0;
-	while (dep<g){
-		int ridx =  s.size()-1;
-		for(int i=ridx;i>=0;i--){
-			s.push_back(changeDir(s[i]));
-			pos = next_pos(pos,changeDir(s[i]));
-			if (pos.Y < 0 || pos.Y >100 || pos.X < 0 || pos.X >100)
-				continue;
-			vis[pos.Y][pos.X] = true;
-		}
-		dep++;
-	}
-}
-
-int makeRet(){
-	int cnt = 0;
-	for(int i=0;i<100;i++){
-		for(int j=0;j<100;j++){
-			if (vis[i][j] && vis[i+1][j] && vis[i][j+1] && vis[i+1][j+1]){
-				cnt++;
+// 현재 멀티탭에 있는 숫자 중 다음에 안 나오거나 가장 멀리 있는 녀석을 뽑는다.
+// 멀티탭에 꽂혀있는 제품들
+int findMinCost(int i){
+	if (vis[input[i]] == true)
+		return -1;
+	int Num = 10000000;
+	int Len = -1;
+	for(int j=0;j<=100;j++){
+		bool flag=false;
+		if (vis[j] == false)
+			continue;
+		for(int k=i+1;k<K;k++){
+			// cout << "k : "<< input[k] << "\n";
+			if (j == input[k]){
+				if (Len < k-i){
+					Num = j;
+					Len = k-i;
+				}
+				flag  =true;
+				break;
 			}
 		}
+		if (!flag)
+			return j;
 	}
-	return cnt;
+	return Num;
 }
 
 
 int main(){
-	int N; cin >> N;
-	for(int i=0;i<N;i++){
-		int x, y ,d, g;
-		cin >> x >> y >> d >> g;
-		vector<int> store;
-		store.push_back(d);
-		vis[y][x] = true;
-		pair<int,int> npos = next_pos({x,y},d);
-		vis[npos.Y][npos.X] = true;
-		makeCurve(store,g,npos);
+	cin >> N >> K;
+	for(int i=0;i<K;i++){
+		cin >> input[i];
 	}
-	cout <<  makeRet() << "\n";
-}
+	// cout << "-----------input--------\n";
+	// for(auto a: input){
+	// 	cout << a << " ";
+	// }
+	// cout << "\n";
+	int ret = 0;
+	for(int i=0;i<K;i++){
+		if (tap_size < N){
+			if (vis[input[i]] == false){
+				vis[input[i]] = true;
+				tap_size++;
+			}
+		}else {
+				// cout << input[i] << " 이거 "<< "\n";
+				int idx = findMinCost(i);
+				if (idx == -1)
+					continue;
+				// cout << idx << "터트림\n";
+				vis[idx] = false;
+				vis[input[i]] = true;
+				ret++;
+		}
+	}
+	cout << ret << "\n";
