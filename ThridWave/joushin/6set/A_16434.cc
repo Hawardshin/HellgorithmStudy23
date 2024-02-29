@@ -40,5 +40,4 @@ int main(){
 		}
 	}
 	cout << maxDamage +1 << "\n";
-
 }
